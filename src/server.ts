@@ -1,7 +1,8 @@
 import app from "./app";
-import { connectProducer } from "./service/kafkaService";
+import logger from "./logger";
+import { connectProducer } from "./service/kafka/kafkaProducer";
 
 app.listen(3000, async () => {
   await connectProducer();
-  console.info("Server running on port 3000");
+  logger.info("Server running on port 3000");
 });

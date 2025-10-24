@@ -1,4 +1,5 @@
 import { Kafka } from "kafkajs";
+import logger from "../../logger";
 
 const kafka = new Kafka({
   clientId: "newsletter-producer",
@@ -9,7 +10,7 @@ const producer = kafka.producer();
 
 export async function connectProducer() {
   await producer.connect();
-  console.info("Kafka Producer Connected");
+  logger.info("Kafka Producer Connected");
 }
 
 export async function publishEvent(topic: string, message: unknown) {
