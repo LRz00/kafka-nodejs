@@ -18,7 +18,7 @@ export async function subscribe(req: Request, res: Response) {
     };
 
     await publishEvent("newsletter-events", event);
-    logger.info(`Event Published: " ${event}`);
+    logger.info(`Event Published: ${JSON.stringify(event)}`)
 
     return res.status(200).json({ status: "ok", event });
   } catch (e) {

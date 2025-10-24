@@ -1,5 +1,9 @@
 import { Kafka } from "kafkajs";
 import logger from "../../logger";
+import { saveSubscription } from "../dynamodb/newsletterRepository";
+import { error } from "console";
+import dotenv from "dotenv";
+dotenv.config();
 
 const kafka = new Kafka({
     clientId: "newsletter-consumer",
@@ -8,8 +12,6 @@ const kafka = new Kafka({
 
 const consumer = kafka.consumer({ groupId: "newsletter-group" });
 
-
-//consumer q ouve o topico "sock events"
 
 async function runConsumer() {
     await consumer.connect();
@@ -25,10 +27,14 @@ async function runConsumer() {
             if (message.value) {
                 const event = JSON.parse(message.value.toString());
                 logger.info("Event received: ", event);
-                //add db logic
+                try {
+                    await saveSubscription(event);
+                }catch(e){
+                    logger.error({error}, "Failed to save even to DynamoDB")
+                }
             }
         }
     });
 }
 
-runConsumer().catch(console.error)
+runConsumer().catch(logger.error)
