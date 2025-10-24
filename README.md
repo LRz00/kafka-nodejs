@@ -15,6 +15,8 @@ Esta aplicação gerencia inscrições em uma newsletter utilizando Kafka para m
 
 **Event Streaming**: Kafka
 
+**Logging**: Pino
+
 
 ## Run Locally
 
