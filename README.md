@@ -23,13 +23,13 @@ Esta aplicação gerencia inscrições em uma newsletter utilizando Kafka para m
 Clone the project
 
 ```bash
-  git clone https://github.com/LRz00/kafka-nodejs
+  git clone https://github.com/LRz00/newsletter-service
 ```
 
 Go to the project directory
 
 ```bash
-  cd kafka-nodejs
+  cd newsletter-service
 ```
 
 Install dependencies
