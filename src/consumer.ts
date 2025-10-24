@@ -1,11 +1,11 @@
 import { Kafka } from "kafkajs";
 
 const kafka = new Kafka({
-    clientId: "stock-consumer",
+    clientId: "newsletter-consumer",
     brokers: ["localhost:9092"],
 });
 
-const consumer = kafka.consumer({ groupId: "stock-group" });
+const consumer = kafka.consumer({ groupId: "newsletter-group" });
 
 
 //consumer q ouve o topico "sock events"
@@ -13,23 +13,18 @@ const consumer = kafka.consumer({ groupId: "stock-group" });
 async function runConsumer() {
     await consumer.connect();
     await consumer.subscribe({
-        topic: "stock-events",
+        topic: "newsletter-events",
         fromBeginning: true
     });
 
-    console.info("Listening to stock events");
+    console.info("Listening to newsletter subscription events");
 
     await consumer.run({
         eachMessage: async ({ topic, partition, message }) => {
             if (message.value) {
                 const event = JSON.parse(message.value.toString());
                 console.info("Event received: ", event);
-
-                if (event.type === "ADD") {
-                    console.info(`${event.productId}: +${event.quantity}`);
-                } else if (event.type === "REMOVE") {
-                    console.info(`${event.productId}: -${event.quantity}`);
-                }
+                //add db logic
             }
         }
     });

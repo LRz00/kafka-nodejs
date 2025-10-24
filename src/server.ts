@@ -2,17 +2,16 @@ import { error } from "console";
 import express from "express";
 import { Kafka } from "kafkajs";
 
-interface StockEvent {
-    productId: string;
-    quantity: number;
-    type: "ADD" | "REMOVE";
-    timestamp: number;
+interface User {
+    fullName: string;
+    email: string;
+    subscribedAt: string;
 }
 
 //incializando o cliente kafka:
 
 const kafka = new Kafka({
-    clientId: "stock-producer",
+    clientId: "newsletter-producer",
     brokers: ["localhost:9092"],
 });
 
@@ -32,23 +31,22 @@ app.use(express.json());
 */
 
 
-app.post("/stock", async (req, res) => {
+app.post("/subscribe", async (req, res) => {
     try {
-        const { productId, quantity, type } = req.body;
-        if (!productId || !quantity || !["ADD", "REMOVE"].includes(type)) {
+        const { fullName, email} = req.body;
+        if (!fullName || !email) {
             console.error("Error related to received information")
             return res.status(400).json({ error: "Invalid Information" });
         }
 
-        const event: StockEvent = {
-            productId,
-            quantity,
-            type,
-            timestamp: Date.now()
+        const event: User = {
+            fullName,
+            email,
+            subscribedAt: new Date().toISOString(),
         }
 
         await producer.send({
-            topic: "stock-events",
+            topic: "newsletter-events",
             messages:[{value: JSON.stringify(event)}],
         });
 
