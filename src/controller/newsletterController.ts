@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { publishEvent } from "../service/kafka/kafkaProducer";
 import logger from "../logger";
+import { SubscriptionRequestBody } from "../types";
 
-export async function subscribe(req: Request, res: Response) {
+export async function subscribe(req: Request<unknown, unknown, SubscriptionRequestBody>, res: Response) {
   try {
     const { fullName, email } = req.body;
 
@@ -10,7 +11,6 @@ export async function subscribe(req: Request, res: Response) {
       logger.error("Invalid data");
       return res.status(400).json({ error: "Invalid Information" });
     }
-
     const event = {
       fullName,
       email,
