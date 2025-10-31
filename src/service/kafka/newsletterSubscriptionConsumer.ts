@@ -1,6 +1,7 @@
 import { Kafka } from "kafkajs";
 import logger from "../../logger";
 import { saveSubscription } from "../dynamodb/newsletterRepository";
+import {kafkaProducer} from "../kafka/kafkaProducer";
 import { error } from "console";
 import dotenv from "dotenv";
 dotenv.config();
@@ -29,6 +30,11 @@ async function runConsumer() {
                 logger.info("Event received: ", event);
                 try {
                     await saveSubscription(event);
+
+                    await kafkaProducer.send({
+                        topic: "user-saved",
+                        messages: [{ value: JSON.stringify({userId: event.userId, status: "SAVED"}) }],
+                    })
                 }catch(e){
                     logger.error({error}, "Failed to save even to DynamoDB")
                 }
