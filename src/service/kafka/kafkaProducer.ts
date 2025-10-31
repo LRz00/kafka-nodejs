@@ -6,16 +6,18 @@ const kafka = new Kafka({
   brokers: ["localhost:9092"],
 });
 
-const producer = kafka.producer();
+const kafkaProducer = kafka.producer();
 
 export async function connectProducer() {
-  await producer.connect();
+  await kafkaProducer.connect();
   logger.info("Kafka Producer Connected");
 }
 
 export async function publishEvent(topic: string, message: unknown) {
-  await producer.send({
+  await kafkaProducer.send({
     topic,
     messages: [{ value: JSON.stringify(message) }],
   });
 }
+
+export { kafkaProducer };
